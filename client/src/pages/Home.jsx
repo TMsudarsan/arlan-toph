@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { FiArrowRight, FiTruck, FiShield, FiPercent, FiUsers, FiStar, FiPackage } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import * as api from '../api';
-
+import blakelyImage from '../asset/Blakely_cloth.jpg';
+import al_img from "../asset/al-img.jpg";
+import dresstshirt from "../asset/dresst-shirt.jpg";
+import downloadimg from "../asset/download.jpg";
 const Home = () => {
     const [bestSellers, setBestSellers] = useState([]);
 
@@ -96,18 +99,18 @@ const Home = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-4">
                                     <div className="rounded-2xl overflow-hidden shadow-premium h-64">
-                                        <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400" alt="Fashion" className="w-full h-full object-cover" />
+                                        <img src={downloadimg} alt="Fashion" className="w-full h-full object-cover" />
                                     </div>
                                     <div className="rounded-2xl overflow-hidden shadow-card h-48">
-                                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400" alt="Fashion" className="w-full h-full object-cover" />
+                                        <img src={blakelyImage} alt="Fashion" className="w-full h-full object-cover" />
                                     </div>
                                 </div>
                                 <div className="space-y-4 pt-8">
                                     <div className="rounded-2xl overflow-hidden shadow-card h-48">
-                                        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400" alt="Fashion" className="w-full h-full object-cover" />
+                                        <img src={dresstshirt} alt="Fashion" className="w-full h-full object-cover" />
                                     </div>
                                     <div className="rounded-2xl overflow-hidden shadow-premium h-64">
-                                        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400" alt="Fashion" className="w-full h-full object-cover" />
+                                        <img src={al_img} alt="Fashion" className="w-full h-full object-cover" />
                                     </div>
                                 </div>
                             </div>
