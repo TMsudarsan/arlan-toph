@@ -24,6 +24,10 @@ const productSchema = new mongoose.Schema({
     style: { type: String, default: '' },
     occasion: { type: String, default: '' },
 }, { timestamps: true });
+productSchema.index({ category: 1 });
+productSchema.index({ wholesalePrice: 1 });
+productSchema.index({ createdAt: -1 });
+productSchema.index({ isAvailable: 1 });
 
 productSchema.index({ name: 'text', description: 'text', category: 'text' });
 

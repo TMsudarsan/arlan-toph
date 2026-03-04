@@ -2,6 +2,7 @@ import Product from '../models/Product.js';
 
 export const getProducts = async (req, res) => {
     try {
+        
         const { category, minPrice, maxPrice, size, color, search, page = 1, limit = 12 } = req.query;
         const filter = { isAvailable: true };
 
@@ -13,12 +14,9 @@ export const getProducts = async (req, res) => {
             if (minPrice) filter.wholesalePrice.$gte = Number(minPrice);
             if (maxPrice) filter.wholesalePrice.$lte = Number(maxPrice);
         }
-        if (search) {
-            filter.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
-            ];
-        }
+  if (search) {
+    filter.$text = { $search: search };
+}
 
         const skip = (Number(page) - 1) * Number(limit);
         const total = await Product.countDocuments(filter);

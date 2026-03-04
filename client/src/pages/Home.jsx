@@ -7,6 +7,7 @@ import blakelyImage from '../asset/Blakely_cloth.jpg';
 import al_img from "../asset/al-img.jpg";
 import dresstshirt from "../asset/dresst-shirt.jpg";
 import downloadimg from "../asset/download.jpg";
+import bradel from "../asset/bradel.jpg";
 const Home = () => {
     const [bestSellers, setBestSellers] = useState([]);
 
@@ -25,22 +26,22 @@ const Home = () => {
     const categories = [
         {
             name: 'Party Wear',
-            image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600',
+            image: blakelyImage,
             desc: 'Glamorous party dresses',
         },
         {
             name: 'Ethnic Wear',
-            image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600',
+            image: al_img,
             desc: 'Traditional elegance',
         },
         {
             name: 'Casual Wear',
-            image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600',
+            image: downloadimg,
             desc: 'Everyday style',
         },
         {
             name: 'Bridal Collections',
-            image: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600',
+            image: bradel,
             desc: 'Wedding specials',
         },
     ];
