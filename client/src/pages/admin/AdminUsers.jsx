@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiUserCheck, FiUserX, FiUsers } from 'react-icons/fi';
+import { FiUserCheck, FiUserX, FiUsers, FiTrash2 } from 'react-icons/fi';
 import * as api from '../../api';
 import toast from 'react-hot-toast';
 
@@ -29,6 +29,18 @@ const AdminUsers = () => {
             toast.success(`User ${isApproved ? 'approved' : 'unapproved'}`);
         } catch (err) {
             toast.error('Failed to update user');
+        }
+    };
+
+    const handleDeleteUser = async (id) => {
+        if (window.confirm("Are you sure you want to delete this buyer?")) {
+            try {
+                await api.deleteUserAdmin(id);
+                setUsers((prev) => prev.filter((u) => u._id !== id));
+                toast.success('Buyer deleted successfully');
+            } catch (err) {
+                toast.error('Failed to delete buyer');
+            }
         }
     };
 
@@ -95,21 +107,30 @@ const AdminUsers = () => {
                                             </span>
                                         </td>
                                         <td className="py-3 px-4">
-                                            {user.isApproved ? (
+                                            <div className="flex items-center gap-3">
+                                                {user.isApproved ? (
+                                                    <button
+                                                        onClick={() => handleApproval(user._id, false)}
+                                                        className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-medium"
+                                                    >
+                                                        <FiUserX size={14} /> Revoke
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleApproval(user._id, true)}
+                                                        className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-medium"
+                                                    >
+                                                        <FiUserCheck size={14} /> Approve
+                                                    </button>
+                                                )}
                                                 <button
-                                                    onClick={() => handleApproval(user._id, false)}
-                                                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-medium"
+                                                    onClick={() => handleDeleteUser(user._id)}
+                                                    className="text-gray-400 hover:text-red-500 transition ml-2"
+                                                    title="Delete Buyer"
                                                 >
-                                                    <FiUserX size={14} /> Revoke
+                                                    <FiTrash2 size={16} />
                                                 </button>
-                                            ) : (
-                                                <button
-                                                    onClick={() => handleApproval(user._id, true)}
-                                                    className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-medium"
-                                                >
-                                                    <FiUserCheck size={14} /> Approve
-                                                </button>
-                                            )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

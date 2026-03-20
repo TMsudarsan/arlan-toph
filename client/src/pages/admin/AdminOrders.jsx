@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiPackage } from 'react-icons/fi';
+import { FiPackage, FiTrash2 } from 'react-icons/fi';
 import * as api from '../../api';
 import toast from 'react-hot-toast';
 
@@ -33,6 +33,18 @@ const AdminOrders = () => {
             toast.success(`Order updated to ${status}`);
         } catch (err) {
             toast.error('Failed to update order');
+        }
+    };
+
+    const handleDeleteOrder = async (id) => {
+        if (window.confirm("Are you sure you want to delete this order?")) {
+            try {
+                await api.deleteOrderAdmin(id);
+                setOrders((prev) => prev.filter((o) => o._id !== id));
+                toast.success('Order deleted successfully');
+            } catch (err) {
+                toast.error('Failed to delete order');
+            }
         }
     };
 
@@ -93,9 +105,13 @@ const AdminOrders = () => {
                                     <p className="font-semibold mt-1">{order.buyer?.name} — {order.buyer?.company}</p>
                                     <p className="text-xs text-fashion-medium">{order.buyer?.email} • {order.buyer?.phone}</p>
                                     <p className="text-xs text-fashion-medium mt-1">
-                                        {new Date(order.createdAt).toLocaleDateString('en-IN', {
-                                            year: 'numeric', month: 'long', day: 'numeric',
-                                        })}
+                                        {order?.createdAt
+                                            ? new Date(order.createdAt).toLocaleDateString('en-IN', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric',
+                                            })
+                                            : '—'}
                                     </p>
                                 </div>
                                 <div className="text-right">
@@ -117,23 +133,32 @@ const AdminOrders = () => {
                             </div>
 
                             {/* Status update */}
-                            <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                                <span className="text-xs text-fashion-medium">Update Status:</span>
-                                <div className="flex flex-wrap gap-1">
-                                    {statuses.map((status) => (
-                                        <button
-                                            key={status}
-                                            onClick={() => handleStatusUpdate(order._id, status)}
-                                            disabled={order.status === status}
-                                            className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${order.status === status
+                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="text-xs text-fashion-medium">Update Status:</span>
+                                    <div className="flex flex-wrap gap-1">
+                                        {statuses.map((status) => (
+                                            <button
+                                                key={status}
+                                                onClick={() => handleStatusUpdate(order._id, status)}
+                                                disabled={order.status === status}
+                                                className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${order.status === status
                                                     ? 'bg-fashion-dark text-white'
                                                     : 'bg-gray-100 text-fashion-medium hover:bg-gray-200'
-                                                }`}
-                                        >
-                                            {status}
-                                        </button>
-                                    ))}
+                                                    }`}
+                                            >
+                                                {status}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={() => handleDeleteOrder(order._id)}
+                                    className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2"
+                                    title="Delete Order"
+                                >
+                                    <FiTrash2 size={16} />
+                                </button>
                             </div>
                         </div>
                     ))}

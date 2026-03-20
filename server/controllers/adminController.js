@@ -122,3 +122,64 @@ export const updateStock = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getMonthlyRevenue = async (req, res) => {
+    try {
+        const { month, year } = req.query;
+        let queryYear = year ? parseInt(year) : new Date().getFullYear();
+        let queryMonth = month ? parseInt(month) : new Date().getMonth() + 1; // 1-12
+
+        // Create start and end dates for the selected month
+        const startDate = new Date(queryYear, queryMonth - 1, 1);
+        const endDate = new Date(queryYear, queryMonth, 0, 23, 59, 59, 999);
+
+        const revenueResult = await Order.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: startDate, $lte: endDate },
+                    status: { $ne: 'Cancelled' }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$totalAmount' },
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+        const totalOrders = revenueResult.length > 0 ? revenueResult[0].count : 0;
+
+        res.json({ totalRevenue, totalOrders, month: queryMonth, year: queryYear });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const deleteOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        await order.deleteOne();
+        res.json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        await user.deleteOne();
+        res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDashboardStats, getAllOrders, updateOrderStatus, getAllUsers, approveUser, getAllProducts, updateStock } from '../controllers/adminController.js';
+import { getDashboardStats, getAllOrders, updateOrderStatus, getAllUsers, approveUser, getAllProducts, updateStock, getMonthlyRevenue, deleteOrder, deleteUser } from '../controllers/adminController.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -11,5 +11,8 @@ router.get('/users', protect, adminOnly, getAllUsers);
 router.put('/users/:id/approve', protect, adminOnly, approveUser);
 router.get('/products', protect, adminOnly, getAllProducts);
 router.put('/products/:id/stock', protect, adminOnly, updateStock);
+router.get('/revenue', protect, adminOnly, getMonthlyRevenue);
+router.delete('/orders/:id', protect, adminOnly, deleteOrder);
+router.delete('/users/:id', protect, adminOnly, deleteUser);
 
 export default router;

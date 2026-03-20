@@ -46,6 +46,9 @@ export const getAllUsers = () => API.get('/admin/users');
 export const approveUser = (id, isApproved) => API.put(`/admin/users/${id}/approve`, { isApproved });
 export const getAllProductsAdmin = () => API.get('/admin/products');
 export const updateStock = (id, data) => API.put(`/admin/products/${id}/stock`, data);
+export const getMonthlyRevenue = (params) => API.get('/admin/revenue', { params });
+export const deleteOrderAdmin = (id) => API.delete(`/admin/orders/${id}`);
+export const deleteUserAdmin = (id) => API.delete(`/admin/users/${id}`);
 
 // Admin Product CRUD
 export const createProduct = (data) => API.post('/products', data);

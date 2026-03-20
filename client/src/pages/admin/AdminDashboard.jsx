@@ -20,6 +20,26 @@ const AdminDashboard = () => {
         fetchStats();
     }, []);
 
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [monthlyRevenue, setMonthlyRevenue] = useState(null);
+    const [monthlyLoading, setMonthlyLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchMonthlyRevenue = async () => {
+            setMonthlyLoading(true);
+            try {
+                const { data } = await api.getMonthlyRevenue({ month: selectedMonth, year: selectedYear });
+                setMonthlyRevenue(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setMonthlyLoading(false);
+            }
+        };
+        fetchMonthlyRevenue();
+    }, [selectedMonth, selectedYear]);
+
     if (loading) {
         return (
             <div className="space-y-6 animate-pulse">
@@ -58,6 +78,47 @@ const AdminDashboard = () => {
                         <p className="text-xs text-fashion-medium mt-1">{stat.label}</p>
                     </div>
                 ))}
+            </div>
+
+            {/* Monthly Revenue Section */}
+            <div className="bg-white rounded-2xl p-6 shadow-soft mb-8">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                    <h3 className="font-display text-lg font-semibold">Monthly Revenue</h3>
+                    <div className="flex gap-3">
+                        <select 
+                            value={selectedMonth} 
+                            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                            className="bg-gray-50 border border-gray-200 text-fashion-dark text-sm rounded-xl focus:ring-fashion-dark focus:border-fashion-dark block p-2.5 outline-none transition-all"
+                        >
+                            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                <option key={m} value={m}>{new Date(0, m - 1).toLocaleString('default', { month: 'long' })}</option>
+                            ))}
+                        </select>
+                        <select 
+                            value={selectedYear} 
+                            onChange={(e) => setSelectedYear(Number(e.target.value))}
+                            className="bg-gray-50 border border-gray-200 text-fashion-dark text-sm rounded-xl focus:ring-fashion-dark focus:border-fashion-dark block p-2.5 outline-none transition-all"
+                        >
+                            {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map(y => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+                {monthlyLoading ? (
+                    <div className="h-20 animate-pulse bg-gray-100 rounded-xl"></div>
+                ) : (
+                    <div className="flex flex-wrap gap-6">
+                        <div className="bg-green-50 rounded-xl p-5 flex-1 min-w-[200px]">
+                            <p className="text-sm text-green-600 mb-1 font-medium">Revenue This Month</p>
+                            <p className="text-3xl font-bold text-green-700">₹{(monthlyRevenue?.totalRevenue || 0).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div className="bg-blue-50 rounded-xl p-5 flex-1 min-w-[200px]">
+                            <p className="text-sm text-blue-600 mb-1 font-medium">Orders This Month</p>
+                            <p className="text-3xl font-bold text-blue-700">{monthlyRevenue?.totalOrders || 0}</p>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Order status breakdown */}
