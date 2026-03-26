@@ -297,7 +297,7 @@ const ProductDetail = () => {
 
                         {/* WhatsApp */}
                         <a
-                            href={`https://wa.me/919876543210?text=Hi! I'm interested in bulk ordering "${product.name}" (${quantity} pcs). Please share more details.`}
+                            href={`https://wa.me/916381627551?text=Hi! I'm interested in bulk ordering "${product.name}" (${quantity} pcs). Please share more details.`}
                             target="_blank"
                             rel="noreferrer"
                             className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-green-500 text-white font-medium hover:bg-green-600 transition-colors mb-6"
